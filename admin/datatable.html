@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firestore Data Display</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <table id="data-table">
+    <tr>
+     
+      <th>User Name</th>
+      <th>File Name</th>x
+      <th>File URL</th>
+    </tr>
+  </table>
+
+  <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-firestore.js"></script>
+  <script>
+    // Initialize Firebase
+    var firebaseConfig = {
+      apiKey: "AIzaSyBoQHHM6CCKqrU-9Mr_RmsjG5DFzcD4Cvk",
+      authDomain: "filemanage-8b377.firebaseapp.com",
+      projectId: "filemanage-8b377",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    // Get Firestore instance
+    var firestore = firebase.firestore();
+
+    // Get reference to your collection
+    var collectionRef = firestore.collection("files");
+
+    // Fetch data from Firestore
+    collectionRef.get().then(function(querySnapshot) {
+      var table = document.getElementById("data-table");
+
+      querySnapshot.forEach(function(doc) {
+        var data = doc.data();
+       
+        var userName = data.createdBy;
+        var fileName = data.name;
+        var fileURL = data.url;
+
+        var row = table.insertRow();
+       
+        var userNameCell = row.insertCell();
+        var fileNameCell = row.insertCell();
+        var fileURLCell = row.insertCell();
+
+      
+        userNameCell.textContent = userName;
+        fileNameCell.textContent = fileName;
+        fileURLCell.innerHTML = '<a href="' + fileURL + '">' + fileName + '</a>';
+      });
+    }).catch(function(error) {
+      console.log("Error getting documents: ", error);
+    });
+  </script>
+</body>
+</html>
